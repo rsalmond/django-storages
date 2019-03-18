@@ -302,7 +302,7 @@ class S3Boto3Storage(Storage):
     def connection(self):
         connection = getattr(self._connections, 'connection', None)
         if connection is None:
-            print('access_key: {}, secret: {}'.format(self.access_key, self.secret_key))
+            print('access_key: {}, secret: {}, token: {}'.format(self.access_key, self.secret_key, self.security_token))
             session = boto3.session.Session()
             self._connections.connection = session.resource(
                 's3',
