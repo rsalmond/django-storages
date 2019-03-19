@@ -188,6 +188,7 @@ class S3Boto3Storage(Storage):
 
     access_key = setting('AWS_S3_ACCESS_KEY_ID', setting('AWS_ACCESS_KEY_ID'))
     secret_key = setting('AWS_S3_SECRET_ACCESS_KEY', setting('AWS_SECRET_ACCESS_KEY'))
+    use_instance_metadata = setting('AWS_USE_INSTANCE_METADATA')
     file_overwrite = setting('AWS_S3_FILE_OVERWRITE', True)
     object_parameters = setting('AWS_S3_OBJECT_PARAMETERS', {})
     bucket_name = setting('AWS_STORAGE_BUCKET_NAME')
@@ -302,11 +303,14 @@ class S3Boto3Storage(Storage):
     def connection(self):
         connection = getattr(self._connections, 'connection', None)
         if connection is None:
-            print('access_key: {}, secret: {}, token: {}'.format(self.access_key, self.secret_key, self.security_token))
-            print('region: {}, use_ssl: {}, endpoint: {}'.format(self.region_name, self.use_ssl, self.endpoint_url))
-            print('config: {}'.format(self.config))
-            print('verify: {}'.format(self.verify))
             session = boto3.session.Session()
+
+            if self.use_instance_metadata:
+                creds = session.get_credentials()
+                self.access_key = creds.access_key
+                self.secret_key = creds.secret_key
+                self.security_token = creds.token
+
             self._connections.connection = session.resource(
                 's3',
                 aws_access_key_id=self.access_key,
