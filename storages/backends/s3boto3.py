@@ -310,6 +310,7 @@ class S3Boto3Storage(Storage):
                 self.access_key = creds.access_key
                 self.secret_key = creds.secret_key
                 self.security_token = creds.token
+                print('using metadata: {}, {}, {}'.format(self.access_key, self.secret_key, self.security_token))
 
             self._connections.connection = session.resource(
                 's3',
