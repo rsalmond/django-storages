@@ -304,7 +304,7 @@ class S3Boto3Storage(Storage):
         connection = getattr(self._connections, 'connection', None)
         if connection is None:
             session = boto3.session.Session()
-
+            print('key: {}, secret: {}'.format(self.access_key, self.secret_key))
             if self.use_instance_metadata:
                 creds = session.get_credentials()
                 self.access_key = creds.access_key
