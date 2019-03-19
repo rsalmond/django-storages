@@ -303,6 +303,9 @@ class S3Boto3Storage(Storage):
         connection = getattr(self._connections, 'connection', None)
         if connection is None:
             print('access_key: {}, secret: {}, token: {}'.format(self.access_key, self.secret_key, self.security_token))
+            print('region: {}, use_ssl: {}, endpoint: {}'.format(self.region_name, self.use_ssl, self.endpoint_url))
+            print('config: {}'.format(self.config))
+            print('verify: {}'.format(self.verify))
             session = boto3.session.Session()
             self._connections.connection = session.resource(
                 's3',
